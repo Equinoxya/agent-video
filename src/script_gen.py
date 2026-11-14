@@ -12,7 +12,7 @@ from pathlib import Path
 
 import requests
 
-from common import ROOT, charger_config
+from common import ROOT, charger_config, dossier_sortie
 
 MOTS_PAR_SECONDE = 2.5   # débit de parole moyen en français
 
@@ -227,7 +227,7 @@ def generer(sujet: str, cfg: dict | None = None) -> dict:
 
 
 def sauvegarder(data: dict, sujet: str) -> Path:
-    dossier = ROOT / "output" / slug(sujet)
+    dossier = dossier_sortie() / slug(sujet)
     dossier.mkdir(parents=True, exist_ok=True)
     chemin = dossier / "scenes.json"
     chemin.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")

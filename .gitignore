@@ -1,1 +1,25 @@
-/.venv
+# Environnements Python
+.venv/
+.venv-*/
+__pycache__/
+*.pyc
+
+# Vidéos et fichiers générés (ils vont dans le dossier "sortie" de config.yaml)
+output/
+*.mp4
+
+# Ta voix : fichier personnel, ne pas publier
+assets/voice/*.wav
+
+# Anciennes versions du personnage
+assets/character/ancien/
+
+# Fichiers temporaires
+voicebox_*.json
+*.tmp
+tmp_*.wav
+
+# Système
+.vscode/
+Thumbs.db
+desktop.ini

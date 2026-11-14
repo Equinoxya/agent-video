@@ -9,12 +9,14 @@ import sys
 import wave
 from pathlib import Path
 
+from common import dossier_sortie
+
 MOTS_PAR_GROUPE = 3          # nombre de mots affichés en même temps
 JAUNE = "{\\c&H00FFFF&}"     # couleur du mot en cours (format ASS : BGR)
 BLANC = "{\\c&HFFFFFF&}"
 
 sujet = sys.argv[1]
-dossier = Path("output") / sujet
+dossier = dossier_sortie() / sujet
 timings = json.load(open(dossier / "timings.json", encoding="utf-8"))
 scenes = json.load(open(dossier / "scenes.json", encoding="utf-8"))["scenes"]
 

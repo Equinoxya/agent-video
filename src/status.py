@@ -1,7 +1,7 @@
 import json, time
-from common import ROOT
+from common import dossier_sortie
 
-FICHIER = ROOT / "output" / "status.json"
+FICHIER = dossier_sortie() / "status.json"
 ETAPES = ["script", "voix", "timing", "personnage", "code", "montage"]
 
 def maj(etape, etat, message=""):

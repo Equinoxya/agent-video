@@ -1,11 +1,8 @@
-# Phase 1-2 (maintenant)
-requests
-pyyaml
-pillow
+requests          # appels à Ollama et à Voicebox
+pyyaml            # lecture de config.yaml
+pillow            # images du personnage
+numpy             # analyse du volume (bouche)
+faster-whisper    # timing mot par mot
 
-# Phases suivantes (on les ajoutera le moment venu)
-# TTS                 # voix clonée (XTTS-v2), demande Python 3.11
-# faster-whisper      # timestamps mot par mot
-# playwright          # rendu du code à l'écran
-# moviepy             # montage
-# numpy
+# Plus tard
+# playwright      # rendu du code à l'écran

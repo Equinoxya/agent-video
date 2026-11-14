@@ -4,8 +4,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+from common import dossier_sortie
+
 sujet = sys.argv[1]
-dossier = Path("output") / sujet
+dossier = dossier_sortie() / sujet
 audios = sorted((dossier / "audio").glob("scene_*.wav"))
 
 # 1. Liste des audios pour les mettre bout à bout

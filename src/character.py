@@ -7,6 +7,8 @@ import sys
 import wave
 from pathlib import Path
 
+from common import dossier_sortie
+
 import numpy as np
 import yaml
 from PIL import Image,ImageFilter, ImageOps
@@ -31,7 +33,7 @@ emotions = config["personnage"]["emotions"]
 dossier_perso = Path("assets/character")
 
 sujet = sys.argv[1]
-dossier = Path("output") / sujet
+dossier = dossier_sortie() / sujet
 scenes = json.load(open(dossier / "scenes.json", encoding="utf-8"))["scenes"]
 
 

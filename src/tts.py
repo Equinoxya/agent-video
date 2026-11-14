@@ -11,6 +11,8 @@ import time
 import wave
 from pathlib import Path
 
+from common import dossier_sortie
+
 import requests
 import yaml
 
@@ -21,7 +23,7 @@ moteur = voix.get("moteur", "voicebox")
 
 # Dossier du sujet (ex : output/les-bases-de-python)
 sujet = sys.argv[1]
-dossier = Path("output") / sujet
+dossier = dossier_sortie() / sujet
 scenes = json.load(open(dossier / "scenes.json", encoding="utf-8"))["scenes"]
 dossier_audio = dossier / "audio"
 dossier_audio.mkdir(exist_ok=True)

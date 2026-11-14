@@ -4,11 +4,13 @@ import json
 import sys
 from pathlib import Path
 
+from common import dossier_sortie
+
 from faster_whisper import WhisperModel
 
 # Dossier du sujet
 sujet = sys.argv[1]
-dossier = Path("output") / sujet
+dossier = dossier_sortie() / sujet
 dossier_audio = dossier / "audio"
 
 # Modèle "small" sur le CPU : on laisse le GPU tranquille
