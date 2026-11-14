@@ -1,0 +1,7 @@
+Mets ici ton échantillon de voix : ref.wav
+
+- 20 à 30 secondes
+- au calme, sans écho ni musique
+- avec le micro que tu utiliseras pour toutes tes vidéos
+- ton naturel, en lisant un texte normal
+- format WAV (mono, 22050 Hz ou plus)

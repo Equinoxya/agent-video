@@ -1,0 +1,67 @@
+# ============================================================
+#  Configuration de l'agent vidéo
+#  Modifie ce fichier, pas le code.
+# ============================================================
+
+video:
+  largeur: 1080
+  hauteur: 1920
+  fps: 30
+  duree_cible_s: 60        # durée visée d'une vidéo, en secondes
+
+llm:
+  url: "http://localhost:11434"
+  modele: "mistral-nemo"     # essaie "qwen2.5:7b" pour une meilleure qualité (plus lent)
+  temperature: 0.7
+  essais: 3                # nombre de tentatives si le JSON est invalide
+  contexte: 4096           # taille du contexte ; 4096 = le modèle tient dans la VRAM (4 Go)
+  max_tokens: 2000         # longueur max de la réponse (garde-fou anti-boucle)
+
+style:
+  langue: "français"
+  ton: "décontracté, pédagogique, avec une pointe d'humour"
+  # Tes directives : l'agent les suit à chaque vidéo.
+  directives: |
+    - Parle comme à une amie, avec "tu".
+    - Une seule idée par vidéo.
+    - Explique d'abord le problème, ensuite la solution.
+    - Utilise une image ou une comparaison de la vie quotidienne.
+
+voix:
+  moteur: "voicebox"        # "voicebox" (Qwen3-TTS) ou "sopro" (secours)
+  voicebox:
+    url: "http://127.0.0.1:17493"
+    profil: "Ma voix"         # nom du profil dans Voicebox
+    engine: "qwen"
+    model_size: "1.7B"
+    # instruct: "ton enjoué et chaleureux"   (consigne de ton, facultative)
+  # Réglages Sopro (utilisés seulement si moteur: "sopro")
+  echantillon: "assets/voice/ref.wav"
+  temperature: 0.8
+  prononciation:
+  # "mot à écrit": "mot prononcé" 
+    "Equi" : "Eki"
+    "tarte tatin": "tarte ta-tin"
+    "Python": "Piton"
+# Les poses du personnage (fichiers dans assets/character/).
+#   ferme  = bouche fermée (obligatoire)
+#   ouvert = bouche ouverte (facultatif : sans lui, la bouche ne bouge pas)
+personnage:
+  emotions:
+    sourire:
+      ferme: sourire.png
+      usage: "accueil, ton chaleureux, conclusion"
+    content:
+      ferme: content.png
+      usage: "bonne astuce, clin d'oeil, réussite"
+    enjoue:
+      ferme: enjoue_ferme.png
+      ouvert: enjoue_ouvert.png
+      usage: "explication pleine d'énergie"
+    interrogation:
+      ferme: interrogation.png
+      usage: "question, réflexion, suspense"
+    contrariee:
+      ferme: contrariee.png
+      # ouvert: contrariee_ouvert.png   (à remettre quand la nouvelle image sera prête)
+      usage: "erreur courante, bug, piège à éviter"
