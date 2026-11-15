@@ -3,6 +3,7 @@ pyyaml            # lecture de config.yaml
 pillow            # images du personnage
 numpy             # analyse du volume (bouche)
 faster-whisper    # timing mot par mot
+agent-status @ git+https://github.com/Equinoxya/dashboard-agents.git#subdirectory=agent-status  # statut pour le tableau de bord
 
 # Plus tard
 # playwright      # rendu du code à l'écran

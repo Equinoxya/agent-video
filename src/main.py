@@ -22,10 +22,17 @@ from status import maj, reset
 # Statut pour le dashboard multi-agents : facultatif.
 # Si le module agent_status n'est pas trouvé, on continue sans.
 try:
-    from agent_status import envoyer_statut
+    from agent_status import suivi
 except ImportError:
-    def envoyer_statut(*args, **kwargs):
-        pass
+    from contextlib import contextmanager
+
+    class _SansSuivi:
+        def etape(self, message): pass
+        def fin(self, message): pass
+
+    @contextmanager
+    def suivi(*args, **kwargs):
+        yield _SansSuivi()
 
 # (nom de l'étape, script à lancer, nom dans status.json)
 ETAPES = [
@@ -37,10 +44,10 @@ ETAPES = [
 ]
 
 
-def ecrire_script(sujet):
+def ecrire_script(sujet, s):
     """Étape 1 : le LLM écrit le script, renvoie le nom du dossier créé"""
     maj("script", "en_cours", "Écriture du script…")
-    envoyer_statut("agent_videos", "en_cours", "Écriture du script")
+    s.etape("Écriture du script")
     data = generer(sujet, charger_config())
     chemin = sauvegarder(data, sujet)
     maj("script", "ok", "Script terminé")
@@ -52,11 +59,11 @@ def ecrire_script(sujet):
     return chemin.parent.name
 
 
-def lancer_etape(nom, script, cle, dossier):
+def lancer_etape(nom, script, cle, dossier, s):
     """Lance un script de src/ sur le dossier de la vidéo"""
     print(f"\n▶ {nom}…")
     maj(cle, "en_cours", f"{nom}…")
-    envoyer_statut("agent_videos", "en_cours", nom)
+    s.etape(nom)
     # cwd=ROOT : les scripts lisent config.yaml et assets/ depuis le dossier de l'agent
     subprocess.run([sys.executable, str(ROOT / "src" / script), dossier],
                    cwd=ROOT, check=True)
@@ -73,30 +80,29 @@ def main():
     if not args.sujet and not args.dossier:
         p.error("donne un sujet, ou --dossier pour reprendre une vidéo")
 
-    envoyer_statut("agent_videos", "en_cours", args.sujet or args.dossier)
-    cle = "script"  # étape en cours, pour signaler une erreur au bon endroit
-    try:
-        reset(args.sujet or args.dossier)
+    # en_cours au début, termine à la fin, erreur si une exception remonte
+    with suivi("agent_videos", args.sujet or args.dossier) as s:
+        cle = "script"  # étape en cours, pour signaler une erreur au bon endroit
+        try:
+            reset(args.sujet or args.dossier)
 
-        # 1. Script (seulement pour un nouveau sujet)
-        if args.dossier:
-            dossier, depart = args.dossier, args.depuis
-        else:
-            dossier, depart = ecrire_script(args.sujet), "voix"
+            # 1. Script (seulement pour un nouveau sujet)
+            if args.dossier:
+                dossier, depart = args.dossier, args.depuis
+            else:
+                dossier, depart = ecrire_script(args.sujet, s), "voix"
 
-        # 2 à 6. Voix, timing, sous-titres, personnage, montage
-        noms = [e[0] for e in ETAPES]
-        for nom, script, cle in ETAPES[noms.index(depart):]:  # cle = étape en cours
-            lancer_etape(nom, script, cle, dossier)
+            # 2 à 6. Voix, timing, sous-titres, personnage, montage
+            noms = [e[0] for e in ETAPES]
+            for nom, script, cle in ETAPES[noms.index(depart):]:  # cle = étape en cours
+                lancer_etape(nom, script, cle, dossier, s)
 
-        video = dossier_sortie() / dossier / "video.mp4"
-        print(f"\n✅ Vidéo prête : {video}")
-        envoyer_statut("agent_videos", "termine", str(video))
-    except Exception as e:
-        maj(cle, "erreur", str(e))
-        envoyer_statut("agent_videos", "erreur", str(e))
-        raise
-
+            video = dossier_sortie() / dossier / "video.mp4"
+            print(f"\n✅ Vidéo prête : {video}")
+            s.fin(str(video))
+        except Exception as e:
+            maj(cle, "erreur", str(e))
+            raise
 
 if __name__ == "__main__":
     main()

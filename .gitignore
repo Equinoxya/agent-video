@@ -23,3 +23,6 @@ tmp_*.wav
 .vscode/
 Thumbs.db
 desktop.ini
+
+# Clés secrètes
+.env
